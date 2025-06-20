@@ -1,0 +1,86 @@
+{
+	"version": "2.0.0",
+	"tasks": [
+		{
+			"label": "Run All Tests",
+			"type": "shell",
+			"command": "npm",
+			"args": [
+				"test"
+			],
+			"group": {
+				"kind": "test",
+				"isDefault": true
+			},
+			"problemMatcher": [
+				"$tsc"
+			]
+		},
+		{
+			"label": "Run Counting Farm Tests",
+			"type": "shell",
+			"command": "npm",
+			"args": [
+				"run",
+				"test:counting-farm"
+			],
+			"group": "test",
+			"problemMatcher": [
+				"$tsc"
+			]
+		},
+		{
+			"label": "Run Memory Card Tests",
+			"type": "shell",
+			"command": "npm",
+			"args": [
+				"run",
+				"test:memory-card"
+			],
+			"group": "test",
+			"problemMatcher": [
+				"$tsc"
+			]
+		},
+		{
+			"label": "Run Landing Page Tests",
+			"type": "shell",
+			"command": "npm",
+			"args": [
+				"run",
+				"test:landing-page"
+			],
+			"group": "test",
+			"problemMatcher": [
+				"$tsc"
+			]
+		},
+		{
+			"label": "Run Tests in Watch Mode",
+			"type": "shell",
+			"command": "npm",
+			"args": [
+				"run",
+				"test:watch"
+			],
+			"group": "test",
+			"problemMatcher": [
+				"$tsc"
+			],
+			"isBackground": true
+		},
+		{
+			"label": "Run Tests with Coverage",
+			"type": "shell",
+			"command": "npm",
+			"args": [
+				"run",
+				"test:coverage"
+			],
+			"group": "test",
+			"problemMatcher": [
+				"$tsc"
+			]
+		}
+	]
+}

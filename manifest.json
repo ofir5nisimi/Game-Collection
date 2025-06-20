@@ -1,0 +1,24 @@
+{
+  "name": "Kids Educational Game Collection",
+  "short_name": "Game Collection",
+  "description": "Educational games for kids focusing on math skills",
+  "start_url": "/index.html",
+  "display": "standalone",
+  "background_color": "#ffffff",
+  "theme_color": "#4caf50",
+  "orientation": "portrait-primary",
+  "icons": [
+    {
+      "src": "images/app-icon-192.png",
+      "type": "image/png",
+      "sizes": "192x192",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "images/app-icon-512.png",
+      "type": "image/png",
+      "sizes": "512x512",
+      "purpose": "any maskable"
+    }
+  ]
+}

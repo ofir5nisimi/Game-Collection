@@ -1,0 +1,8 @@
+<!-- This is a generic placeholder image -->
+<svg width="400" height="200" xmlns="http://www.w3.org/2000/svg">
+  <rect width="400" height="200" fill="#95a5a6" />
+  <g>
+    <text x="200" y="100" font-family="Arial" font-size="24" font-weight="bold" text-anchor="middle" fill="white">Game Thumbnail</text>
+    <text x="200" y="130" font-family="Arial" font-size="16" text-anchor="middle" fill="white">Image not available</text>
+  </g>
+</svg>

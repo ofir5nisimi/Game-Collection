@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">    <title>Math Monster Munch - Math Game for Kids</title>
+    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="../../mobile.css">
+    <link rel="icon" type="image/svg+xml" href="../../images/app-icon-192.svg">
+    <meta name="theme-color" content="#4caf50">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <link rel="apple-touch-icon" href="../../images/app-icon-192.svg">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>Math Monster Munch</h1>
+            <div class="score-container">
+                <div id="score">Score: 0</div>
+                <div id="level">Level: 1</div>
+                <div id="lives">Lives: <span>❤️❤️❤️</span></div>
+            </div>
+            <div class="controls">
+                <button id="start-btn">Start Game</button>
+                <button id="home-btn" onclick="window.location.href='../../index.html'">Home</button>
+                <select id="game-mode">
+                    <option value="addition">Addition</option>
+                    <option value="subtraction">Subtraction</option>
+                    <option value="mixed">Mixed</option>
+                </select>
+            </div>
+        </header>
+
+        <div class="game-board">
+            <div id="instructions" class="instructions">
+                <h2>Welcome to Math Monster Munch!</h2>
+                <p>Feed the hungry monsters by solving math problems and giving them the right number of food items.</p>
+                
+                <div class="game-modes">
+                    <h3>Game Modes:</h3>
+                    <ul>
+                        <li><strong>Addition:</strong> Feed monsters by adding numbers together</li>
+                        <li><strong>Subtraction:</strong> Feed monsters by subtracting numbers</li>
+                        <li><strong>Mixed:</strong> A combination of addition and subtraction</li>
+                    </ul>
+                </div>
+                
+                <p>Select a game mode and click "Start Game" to begin your math adventure!</p>
+                <p class="age-range">Recommended for ages 6-8</p>
+            </div>
+
+            <div id="game-area" class="hidden">
+                <!-- Game content will be generated here -->
+            </div>
+
+            <div id="result" class="hidden">
+                <h2>Great job!</h2>
+                <p id="result-message"></p>
+                <button id="next-btn">Next Question</button>
+            </div>
+        </div>
+    </div>
+    <script src="script.js"></script>
+</body>
+</html>

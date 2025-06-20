@@ -1,0 +1,20 @@
+<!-- This is a placeholder SVG image for the memory card game -->
+<svg width="400" height="200" xmlns="http://www.w3.org/2000/svg">
+  <rect width="400" height="200" fill="#3498db" />
+  <g>
+    <!-- Cards -->
+    <rect x="50" y="50" width="60" height="80" rx="5" fill="#ecf0f1" stroke="#bdc3c7" stroke-width="2" />
+    <rect x="130" y="50" width="60" height="80" rx="5" fill="#ecf0f1" stroke="#bdc3c7" stroke-width="2" />
+    <rect x="210" y="50" width="60" height="80" rx="5" fill="#2c3e50" stroke="#bdc3c7" stroke-width="2" />
+    <rect x="290" y="50" width="60" height="80" rx="5" fill="#2c3e50" stroke="#bdc3c7" stroke-width="2" />
+    
+    <!-- Symbols -->
+    <text x="80" y="95" font-family="Arial" font-size="24" text-anchor="middle" fill="#2c3e50">🐱</text>
+    <text x="160" y="95" font-family="Arial" font-size="24" text-anchor="middle" fill="#2c3e50">🐶</text>
+    <text x="240" y="95" font-family="Arial" font-size="24" text-anchor="middle" fill="white">?</text>
+    <text x="320" y="95" font-family="Arial" font-size="24" text-anchor="middle" fill="white">?</text>
+    
+    <!-- Game title -->
+    <text x="200" y="170" font-family="Arial" font-size="24" font-weight="bold" text-anchor="middle" fill="white">Memory Card Game</text>
+  </g>
+</svg>

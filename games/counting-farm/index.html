@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">    <title>Counting Farm - Math Game for Kids</title>
+    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="../../mobile.css">
+    <link rel="icon" type="image/svg+xml" href="../../images/app-icon-192.svg">
+    <meta name="theme-color" content="#4caf50">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <link rel="apple-touch-icon" href="../../images/app-icon-192.svg">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>Counting Farm</h1>
+            <div class="score-container">
+                <div id="score">Score: 0</div>
+                <div id="level">Level: 1</div>
+            </div>
+            <div class="controls">
+                <button id="start-btn">Start Game</button>
+                <button id="home-btn" onclick="window.location.href='../../index.html'">Home</button>
+                <select id="game-mode">
+                    <option value="counting">Counting</option>
+                    <option value="comparing">Comparing</option>
+                    <option value="grouping">Grouping</option>
+                    <option value="sharing">Sharing</option>
+                </select>
+            </div>
+        </header>
+
+        <div class="game-board">
+            <div id="instructions" class="instructions">
+                <h2>Welcome to Counting Farm!</h2>
+                <p>Help Farmer Jo take care of the animals by solving fun math problems.</p>
+                <p>Choose a game mode and press Start to begin!</p>
+            </div>
+            
+            <div id="game-area" class="game-area hidden">
+                <!-- Game content will be dynamically generated here -->
+            </div>
+            
+            <div id="result" class="result hidden">
+                <h2>Great job!</h2>
+                <p id="result-message"></p>
+                <button id="next-btn">Next Challenge</button>
+            </div>
+        </div>
+        
+        <div class="farm-background"></div>
+    </div>
+    <script src="script.js"></script>
+</body>
+</html>

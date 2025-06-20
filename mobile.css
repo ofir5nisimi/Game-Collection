@@ -1,0 +1,49 @@
+/* Mobile touch enhancements */
+.touch-active {
+    transform: scale(0.95) !important;
+    transition: transform 0.1s !important;
+    opacity: 0.8 !important;
+}
+
+.touch-highlight {
+    box-shadow: 0 0 0 3px rgba(76, 175, 80, 0.5) !important;
+    transition: box-shadow 0.2s !important;
+}
+
+/* Make buttons larger and more touch-friendly on mobile */
+@media (max-width: 768px) {
+    button, 
+    .game-card a.play-button {
+        min-height: 44px;
+        padding: 12px 20px;
+        margin: 8px 4px;
+    }
+    
+    /* Increase spacing between interactive elements */
+    .controls {
+        margin-bottom: 20px;
+    }
+    
+    /* Ensure form controls are large enough for touch */
+    select, 
+    input {
+        min-height: 44px;
+        font-size: 16px; /* Prevents iOS zoom on focus */
+    }
+    
+    /* Prevent double-tap zoom on iOS */
+    a, button {
+        touch-action: manipulation;
+    }
+    
+    /* Game cards touch improvements */
+    .game-card {
+        margin-bottom: 24px;
+    }
+    
+    /* Improved tap targets */
+    .game-info h2, 
+    .game-info p {
+        padding: 4px 0;
+    }
+}

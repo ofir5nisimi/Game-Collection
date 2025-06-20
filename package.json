@@ -1,0 +1,35 @@
+{
+  "name": "game-collection",
+  "version": "1.0.0",
+  "description": "A collection of browser-based educational games",
+  "main": "main.js",
+  "scripts": {
+    "test": "jest",
+    "test:watch": "jest --watch",
+    "test:coverage": "jest --coverage",
+    "test:counting-farm": "jest tests/unit/counting-farm",
+    "test:memory-card": "jest tests/unit/memory-card",
+    "test:landing-page": "jest tests/unit/landing-page",
+    "test:math-monster-munch": "jest tests/unit/math-monster-munch",
+    "test:math-monster-fixes": "jest tests/unit/math-monster-munch/fixes.test.js",
+    "prepare": "husky install",
+    "precommit": "npm test"
+  },
+  "keywords": [
+    "games",
+    "education",
+    "javascript"
+  ],
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "@babel/core": "^7.22.5",
+    "@babel/preset-env": "^7.22.5",
+    "@testing-library/dom": "^9.3.1",
+    "@testing-library/jest-dom": "^5.16.5",
+    "babel-jest": "^29.5.0",
+    "husky": "^8.0.0",
+    "jest": "^29.5.0",
+    "jest-environment-jsdom": "^29.5.0"
+  }
+}
