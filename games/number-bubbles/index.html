@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Number Bubbles - Math Game for Kids</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>Number Bubbles</h1>
+            <div class="score-container">
+                <div id="score">Score: 0</div>
+                <div id="level">Level: 1</div>
+                <div id="timer">Time: <span>60</span>s</div>
+            </div>
+            <div class="controls">
+                <button id="start-btn">Start Game</button>
+                <button id="home-btn" onclick="window.location.href='../../index.html'">Home</button>
+                <select id="game-mode">
+                    <option value="ascending">Ascending Order</option>
+                    <option value="descending">Descending Order</option>
+                    <option value="even">Even Numbers</option>
+                    <option value="odd">Odd Numbers</option>
+                </select>
+            </div>
+        </header>
+
+        <div class="game-board">
+            <div id="instructions" class="instructions">
+                <h2>Welcome to Number Bubbles!</h2>
+                <p>Pop the floating bubbles in the correct order based on the chosen game mode.</p>
+                
+                <div class="game-modes">
+                    <h3>Game Modes:</h3>
+                    <ul>
+                        <li><strong>Ascending Order:</strong> Pop bubbles from smallest to largest number</li>
+                        <li><strong>Descending Order:</strong> Pop bubbles from largest to smallest number</li>
+                        <li><strong>Even Numbers:</strong> Pop only bubbles with even numbers (2, 4, 6...)</li>
+                        <li><strong>Odd Numbers:</strong> Pop only bubbles with odd numbers (1, 3, 5...)</li>
+                    </ul>
+                </div>
+                
+                <p>Select a game mode and click "Start Game" to begin!</p>
+                <p class="age-range">Recommended for ages 6-8</p>
+            </div>
+
+            <div id="game-area" class="hidden">
+                <!-- Game content will be generated here -->
+            </div>
+
+            <div id="result" class="hidden">
+                <h2>Great job!</h2>
+                <p id="result-message">You completed the level!</p>
+                <button id="next-btn">Next Level</button>
+            </div>
+        </div>
+    </div>
+    <script src="script.js"></script>
+</body>
+</html>
