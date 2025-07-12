@@ -3,6 +3,12 @@ document.addEventListener('DOMContentLoaded', () => {
     const startBtn = document.getElementById('start-btn');
     const nextBtn = document.getElementById('next-btn');
     const gameModeSelect = document.getElementById('game-mode');
+    const startingLevelSelect = document.getElementById('starting-level');
+    const levelConfigBtn = document.getElementById('level-config-btn');
+    const levelConfigModal = document.getElementById('level-config-modal');
+    const saveConfigBtn = document.getElementById('save-config-btn');
+    const resetConfigBtn = document.getElementById('reset-config-btn');
+    const closeConfigBtn = document.getElementById('close-config-btn');
     const instructionsDiv = document.getElementById('instructions');
     const gameAreaDiv = document.getElementById('game-area');
     const resultDiv = document.getElementById('result');
@@ -18,7 +24,18 @@ document.addEventListener('DOMContentLoaded', () => {
     let currentMode = '';
     let currentQuestion = {};
     let correctAnswer = null;
-    let monsterState = 'hungry'; // Can be 'hungry' or 'happy'
+    let monsterState = 'hungry';
+    let consecutiveCorrect = 0;
+    let consecutiveIncorrect = 0;
+    
+    // Level configuration with default values
+    let levelConfig = {
+        1: { maxNumber: 3, displayName: 'Level 1 (up to 3)' },
+        2: { maxNumber: 5, displayName: 'Level 2 (up to 5)' },
+        3: { maxNumber: 10, displayName: 'Level 3 (up to 10)' },
+        4: { maxNumber: 15, displayName: 'Level 4 (up to 15)' },
+        5: { maxNumber: 20, displayName: 'Level 5 (up to 20)' }
+    };
     
     // Monster colors (for variety)
     const monsterColors = [
@@ -33,12 +50,148 @@ document.addEventListener('DOMContentLoaded', () => {
     // Food emojis
     const foodEmojis = ['🍎', '🍌', '🍕', '🍪', '🍦', '🍩'];
     
+    // Initialize the game
+    function init() {
+        loadLevelConfig();
+        updateStartingLevelOptions();
+        setupEventListeners();
+    }
+    
+    // Load level configuration from localStorage or use defaults
+    function loadLevelConfig() {
+        const savedConfig = localStorage.getItem('mathMonsterLevelConfig');
+        if (savedConfig) {
+            try {
+                const parsed = JSON.parse(savedConfig);
+                levelConfig = { ...levelConfig, ...parsed };
+            } catch (e) {
+                console.warn('Failed to load level config, using defaults');
+            }
+        }
+        updateLevelConfigInputs();
+    }
+    
+    // Save level configuration to localStorage
+    function saveLevelConfig() {
+        localStorage.setItem('mathMonsterLevelConfig', JSON.stringify(levelConfig));
+    }
+    
+    // Update level configuration inputs with current values
+    function updateLevelConfigInputs() {
+        for (let i = 1; i <= 5; i++) {
+            const input = document.getElementById(`level-${i}-max`);
+            if (input) {
+                input.value = levelConfig[i].maxNumber;
+            }
+        }
+    }
+    
+    // Update starting level options based on current configuration
+    function updateStartingLevelOptions() {
+        const options = startingLevelSelect.querySelectorAll('option');
+        options.forEach((option, index) => {
+            const levelNum = index + 1;
+            option.textContent = `Level ${levelNum} (up to ${levelConfig[levelNum].maxNumber})`;
+        });
+    }
+    
+    // Setup all event listeners
+    function setupEventListeners() {
+        startBtn.addEventListener('click', startGame);
+        nextBtn.addEventListener('click', generateQuestion);
+        levelConfigBtn.addEventListener('click', openLevelConfig);
+        saveConfigBtn.addEventListener('click', saveLevelConfigFromInputs);
+        resetConfigBtn.addEventListener('click', resetLevelConfig);
+        closeConfigBtn.addEventListener('click', closeLevelConfig);
+        
+        // Close modal when clicking outside
+        levelConfigModal.addEventListener('click', (e) => {
+            if (e.target === levelConfigModal) {
+                closeLevelConfig();
+            }
+        });
+    }
+    
+    // Open level configuration modal
+    function openLevelConfig() {
+        levelConfigModal.classList.remove('hidden');
+    }
+    
+    // Close level configuration modal
+    function closeLevelConfig() {
+        levelConfigModal.classList.add('hidden');
+    }
+    
+    // Save level configuration from input fields
+    function saveLevelConfigFromInputs() {
+        for (let i = 1; i <= 5; i++) {
+            const input = document.getElementById(`level-${i}-max`);
+            if (input) {
+                const value = parseInt(input.value);
+                if (value >= 1 && value <= 50) {
+                    levelConfig[i].maxNumber = value;
+                    levelConfig[i].displayName = `Level ${i} (up to ${value})`;
+                }
+            }
+        }
+        saveLevelConfig();
+        updateStartingLevelOptions();
+        closeLevelConfig();
+        
+        // Show confirmation message
+        showMessage('Level settings saved!', 'success');
+    }
+    
+    // Reset level configuration to defaults
+    function resetLevelConfig() {
+        levelConfig = {
+            1: { maxNumber: 3, displayName: 'Level 1 (up to 3)' },
+            2: { maxNumber: 5, displayName: 'Level 2 (up to 5)' },
+            3: { maxNumber: 10, displayName: 'Level 3 (up to 10)' },
+            4: { maxNumber: 15, displayName: 'Level 4 (up to 15)' },
+            5: { maxNumber: 20, displayName: 'Level 5 (up to 20)' }
+        };
+        updateLevelConfigInputs();
+        saveLevelConfig();
+        updateStartingLevelOptions();
+        
+        // Show confirmation message
+        showMessage('Level settings reset to default!', 'success');
+    }
+    
+    // Show a temporary message
+    function showMessage(text, type = 'info') {
+        const messageDiv = document.createElement('div');
+        messageDiv.className = `message ${type}`;
+        messageDiv.textContent = text;
+        messageDiv.style.cssText = `
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            padding: 15px 20px;
+            border-radius: 5px;
+            color: white;
+            font-weight: bold;
+            z-index: 1001;
+            background-color: ${type === 'success' ? '#4caf50' : '#2196f3'};
+            box-shadow: 0 3px 10px rgba(0,0,0,0.3);
+        `;
+        
+        document.body.appendChild(messageDiv);
+        setTimeout(() => {
+            document.body.removeChild(messageDiv);
+        }, 3000);
+    }
+    
     // Start the game
     function startGame() {
         currentMode = gameModeSelect.value;
+        level = parseInt(startingLevelSelect.value);
         score = 0;
-        level = 1;
         lives = 3;
+        consecutiveCorrect = 0;
+        consecutiveIncorrect = 0;
+        
         updateScore();
         updateLives();
         
@@ -52,7 +205,9 @@ document.addEventListener('DOMContentLoaded', () => {
         gameAreaDiv.classList.remove('hidden');
         
         generateQuestion();
-    }      // Generate a question based on the selected mode and current level
+    }
+    
+    // Generate a question based on the selected mode and current level
     function generateQuestion() {
         gameAreaDiv.innerHTML = ''; // Clear previous content
         monsterState = 'hungry';
@@ -86,8 +241,7 @@ document.addEventListener('DOMContentLoaded', () => {
     
     // Generate an addition question
     function generateAdditionQuestion(monsterColor, foodEmoji) {
-        // Determine numbers based on level
-        const maxNum = Math.min(5 + Math.floor(level / 2), 15);
+        const maxNum = levelConfig[level].maxNumber;
         const num1 = Math.floor(Math.random() * maxNum) + 1;
         const num2 = Math.floor(Math.random() * maxNum) + 1;
         correctAnswer = num1 + num2;
@@ -102,20 +256,18 @@ document.addEventListener('DOMContentLoaded', () => {
         createMonster(monsterColor);
         
         // Generate answer options
-        createAnswerOptions(correctAnswer, 20, foodEmoji);
+        createAnswerOptions(correctAnswer, maxNum * 2 + 5, foodEmoji);
     }
     
     // Generate a subtraction question
     function generateSubtractionQuestion(monsterColor, foodEmoji) {
-        // Determine numbers based on level, ensuring num1 >= num2
-        const maxNum = Math.min(8 + Math.floor(level / 2), 20);
+        const maxNum = levelConfig[level].maxNumber;
         let num1 = Math.floor(Math.random() * maxNum) + 1;
         let num2 = Math.floor(Math.random() * num1) + 1;
         
-        // For higher levels, occasionally use larger numbers with smaller differences
-        if (level > 3 && Math.random() > 0.7) {
-            num1 = Math.min(10 + level, 20);
-            num2 = num1 - (Math.floor(Math.random() * 5) + 1);
+        // Ensure we don't get negative results
+        if (num2 > num1) {
+            [num1, num2] = [num2, num1];
         }
         
         correctAnswer = num1 - num2;
@@ -130,8 +282,10 @@ document.addEventListener('DOMContentLoaded', () => {
         createMonster(monsterColor);
         
         // Generate answer options
-        createAnswerOptions(correctAnswer, 20, foodEmoji);
-    }    // Create the monster character
+        createAnswerOptions(correctAnswer, maxNum, foodEmoji);
+    }
+    
+    // Create the monster character
     function createMonster(color) {
         const monsterContainer = document.createElement('div');
         monsterContainer.classList.add('monster-container');
@@ -174,23 +328,20 @@ document.addEventListener('DOMContentLoaded', () => {
         const answerContainer = document.createElement('div');
         answerContainer.classList.add('answer-options');
         
-        // Use a reasonable maxValue based on level
-        const adjustedMaxValue = Math.max(maxValue, correctAnswer + 5);
-        
         // Create an array of possible answers
         let answers = [correctAnswer];
         
         // Add 3 more unique options that are reasonable distractors
         while (answers.length < 4) {
             // Create answers that are close to the correct answer
-            let range = Math.min(3, Math.ceil(correctAnswer / 3));
+            let range = Math.max(2, Math.ceil(correctAnswer / 2));
             let min = Math.max(0, correctAnswer - range);
-            let max = Math.min(adjustedMaxValue, correctAnswer + range);
+            let max = Math.min(maxValue, correctAnswer + range);
             
             // For smaller numbers, ensure we have a good spread
             if (correctAnswer <= 5) {
                 min = 0;
-                max = Math.min(10, adjustedMaxValue);
+                max = Math.min(10, maxValue);
             }
             
             const randomAnswer = Math.floor(Math.random() * (max - min + 1)) + min;
@@ -206,27 +357,48 @@ document.addEventListener('DOMContentLoaded', () => {
         answers.forEach(answer => {
             const option = document.createElement('button');
             option.classList.add('answer-btn');
-              // Add food emojis based on the answer number
-            let buttonText = '';
-            for (let i = 0; i < answer; i++) {
-                buttonText += foodEmoji;
-            }
             
-            // If answer is 0, show zero emojis instead of "None"
+            // Add food emojis based on the answer number, organized in rows of 10
+            let buttonHTML = '';
             if (answer === 0) {
-                buttonText = '0';
+                buttonHTML = '<div class="emoji-row">0</div>';
+            } else {
+                const fullRows = Math.floor(answer / 10);
+                const remainder = answer % 10;
+                
+                // Create full rows of 10 emojis
+                for (let row = 0; row < fullRows; row++) {
+                    buttonHTML += '<div class="emoji-row">';
+                    for (let i = 0; i < 10; i++) {
+                        buttonHTML += foodEmoji;
+                    }
+                    buttonHTML += '</div>';
+                }
+                
+                // Add remaining emojis in the last row
+                if (remainder > 0) {
+                    buttonHTML += '<div class="emoji-row">';
+                    for (let i = 0; i < remainder; i++) {
+                        buttonHTML += foodEmoji;
+                    }
+                    buttonHTML += '</div>';
+                }
             }
             
-            option.innerHTML = buttonText;
+            option.innerHTML = buttonHTML;
             option.dataset.answer = answer;
             option.addEventListener('click', checkAnswer);
             answerContainer.appendChild(option);
         });
         
         gameAreaDiv.appendChild(answerContainer);
-    }    // Check if the answer is correct
+    }
+    
+    // Check if the answer is correct
     function checkAnswer(event) {
-        const selectedAnswer = parseInt(event.target.dataset.answer);
+        // Find the button element (in case we clicked on a child element)
+        const button = event.target.closest('.answer-btn');
+        const selectedAnswer = parseInt(button.dataset.answer);
         const isCorrect = selectedAnswer === correctAnswer;
         
         // Get the monster element
@@ -239,55 +411,102 @@ document.addEventListener('DOMContentLoaded', () => {
         const resultHeading = document.querySelector('#result h2');
         
         if (isCorrect) {
-            // Make monster happy when correct
-            monster.classList.add('hungry');  // REVERSED: Using hungry class for happy emotion
-            monsterState = 'happy';
-            
-            // Update result and score
-            resultHeading.textContent = 'Great job!';
-            resultHeading.classList.remove('incorrect');
-            score += 10 * level;
-            resultMessage.textContent = `You got it right! You earned ${10 * level} points.`;
-            
-            // Level up after every 3 correct answers
-            if (score / (10 * level) >= 3 * level) {
-                level++;
-                resultMessage.textContent += ` You've reached level ${level}!`;
-            }
-            
-            updateScore();
+            handleCorrectAnswer(resultHeading);
         } else {
-            // Make monster hungry/sad when incorrect
-            monster.classList.add('happy');  // REVERSED: Using happy class for hungry/sad emotion
-            monsterState = 'hungry';
-            
-            // Update result and lives
-            resultHeading.textContent = 'Oops!';
-            resultHeading.classList.add('incorrect');
-            lives--;
-            updateLives();
-            
-            resultMessage.textContent = `That's not right. The correct answer was ${correctAnswer}.`;
-            
-            // Check if game over
-            if (lives <= 0) {
-                resultMessage.textContent += ' Game Over! Let\'s start again.';
-                // Reset the game
-                setTimeout(() => {
-                    startGame();
-                }, 3000);
-                return;
-            }
+            handleIncorrectAnswer(resultHeading);
         }
         
         // Show the result
         resultDiv.classList.remove('hidden');
     }
     
+    // Handle correct answer
+    function handleCorrectAnswer(resultHeading) {
+        const monster = document.querySelector('.monster');
+        
+        // Make monster happy when correct
+        monster.classList.add('hungry');  // REVERSED: Using hungry class for happy emotion
+        monsterState = 'happy';
+        
+        // Update consecutive counters
+        consecutiveCorrect++;
+        consecutiveIncorrect = 0;
+        
+        // Update result and score
+        resultHeading.textContent = 'Great job!';
+        resultHeading.classList.remove('incorrect');
+        score += 10 * level;
+        
+        let message = `You got it right! You earned ${10 * level} points.`;
+        
+        // Check for level progression (3 correct in a row)
+        if (consecutiveCorrect >= 3) {
+            if (level < 5) {
+                level++;
+                consecutiveCorrect = 0;
+                message += ` Amazing! You've advanced to ${levelConfig[level].displayName}!`;
+            } else {
+                message += ` You're a math master! Keep up the excellent work!`;
+            }
+        } else {
+            const remaining = 3 - consecutiveCorrect;
+            message += ` ${remaining} more correct answers to advance to the next level!`;
+        }
+        
+        resultMessage.textContent = message;
+        updateScore();
+    }
+    
+    // Handle incorrect answer
+    function handleIncorrectAnswer(resultHeading) {
+        const monster = document.querySelector('.monster');
+        
+        // Make monster hungry/sad when incorrect
+        monster.classList.add('happy');  // REVERSED: Using happy class for hungry/sad emotion
+        monsterState = 'hungry';
+        
+        // Update consecutive counters
+        consecutiveIncorrect++;
+        consecutiveCorrect = 0;
+        
+        // Update result and lives
+        resultHeading.textContent = 'Oops!';
+        resultHeading.classList.add('incorrect');
+        lives--;
+        updateLives();
+        
+        let message = `That's not right. The correct answer was ${correctAnswer}.`;
+        
+        // Check for level regression (3 incorrect in a row)
+        if (consecutiveIncorrect >= 3) {
+            if (level > 1) {
+                level--;
+                consecutiveIncorrect = 0;
+                message += ` Don't worry! Let's try ${levelConfig[level].displayName} for a bit.`;
+            } else {
+                message += ` Keep trying! You can do it!`;
+            }
+        }
+        
+        resultMessage.textContent = message;
+        
+        // Check if game over
+        if (lives <= 0) {
+            resultMessage.textContent += ' Game Over! Let\'s start again.';
+            // Reset the game
+            setTimeout(() => {
+                startGame();
+            }, 3000);
+            return;
+        }
+        
+        updateScore();
+    }
+    
     // Update the score display
     function updateScore() {
         scoreDisplay.textContent = `Score: ${score}`;
-        levelDisplay.textContent = `Level: ${level}`;
+        levelDisplay.textContent = `Level: ${level} (up to ${levelConfig[level].maxNumber})`;
     }
     
     // Update the lives display
@@ -307,10 +526,6 @@ document.addEventListener('DOMContentLoaded', () => {
         }
         return array;
     }
-    
-    // Event listeners
-    startBtn.addEventListener('click', startGame);
-    nextBtn.addEventListener('click', generateQuestion);
     
     // Create a falling food animation in the background
     function createFallingFood() {
@@ -350,6 +565,9 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     `;
     document.head.appendChild(style);
+    
+    // Initialize the game when the page loads
+    init();
     
     // Start the falling food animation
     setTimeout(createFallingFood, 1000);
