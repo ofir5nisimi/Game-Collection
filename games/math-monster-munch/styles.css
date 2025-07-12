@@ -234,16 +234,16 @@ select {
     border-radius: 0;
 }
 
-.hungry .monster-mouth {
-    height: 30px;
-    border-radius: 50% / 0 0 100% 100%; /* Sad mouth curves downward */
-    animation: chomp 1s infinite;
-}
-
 .happy .monster-mouth {
     height: 20px;
     border-radius: 50% / 100% 100% 0 0; /* Happy mouth curves upward */
     animation: smile 1s infinite;
+}
+
+.hungry .monster-mouth {
+    height: 30px;
+    border-radius: 50% / 0 0 100% 100%; /* Sad mouth curves downward */
+    animation: chomp 1s infinite;
 }
 
 .food-items {

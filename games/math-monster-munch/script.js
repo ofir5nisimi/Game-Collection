@@ -24,7 +24,7 @@ document.addEventListener('DOMContentLoaded', () => {
     let currentMode = '';
     let currentQuestion = {};
     let correctAnswer = null;
-    let monsterState = 'hungry';
+    let monsterState = 'neutral';
     let consecutiveCorrect = 0;
     let consecutiveIncorrect = 0;
     
@@ -237,7 +237,7 @@ document.addEventListener('DOMContentLoaded', () => {
     // Generate a question based on the selected mode and current level
     function generateQuestion() {
         gameAreaDiv.innerHTML = ''; // Clear previous content
-        monsterState = 'hungry';
+        monsterState = 'neutral';
         
         // Hide the result div when generating a new question
         resultDiv.classList.add('hidden');
@@ -318,7 +318,7 @@ document.addEventListener('DOMContentLoaded', () => {
         monsterContainer.classList.add('monster-container');
         
         const monster = document.createElement('div');
-        monster.classList.add('monster', 'happy'); // Start with happy class but hungry appearance
+        monster.classList.add('monster'); // Start with neutral appearance
         
         const monsterBody = document.createElement('div');
         monsterBody.classList.add('monster-body');
@@ -431,7 +431,7 @@ document.addEventListener('DOMContentLoaded', () => {
         // Get the monster element
         const monster = document.querySelector('.monster');
         
-        // Reset monster classes to ensure proper state
+        // Reset monster classes to neutral state before applying new emotion
         monster.className = 'monster';
         
         // Update the result heading based on correctness
@@ -451,8 +451,9 @@ document.addEventListener('DOMContentLoaded', () => {
     function handleCorrectAnswer(resultHeading) {
         const monster = document.querySelector('.monster');
         
-        // Make monster happy when correct
-        monster.classList.add('hungry');  // REVERSED: Using hungry class for happy emotion
+        // Clear any previous emotion classes and add happy
+        monster.classList.remove('happy', 'hungry');
+        monster.classList.add('happy');
         monsterState = 'happy';
         
         // Update consecutive counters
@@ -488,8 +489,9 @@ document.addEventListener('DOMContentLoaded', () => {
     function handleIncorrectAnswer(resultHeading) {
         const monster = document.querySelector('.monster');
         
-        // Make monster hungry/sad when incorrect
-        monster.classList.add('happy');  // REVERSED: Using happy class for hungry/sad emotion
+        // Clear any previous emotion classes and add sad
+        monster.classList.remove('happy', 'hungry');
+        monster.classList.add('hungry');
         monsterState = 'hungry';
         
         // Update consecutive counters
