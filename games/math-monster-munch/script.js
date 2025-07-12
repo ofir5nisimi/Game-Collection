@@ -15,12 +15,10 @@ document.addEventListener('DOMContentLoaded', () => {
     const resultMessage = document.getElementById('result-message');
     const scoreDisplay = document.getElementById('score');
     const levelDisplay = document.getElementById('level');
-    const livesDisplay = document.getElementById('lives').querySelector('span');
 
     // Game state
     let score = 0;
     let level = 1;
-    let lives = 3;
     let currentMode = '';
     let currentQuestion = {};
     let correctAnswer = null;
@@ -215,12 +213,10 @@ document.addEventListener('DOMContentLoaded', () => {
         currentMode = gameModeSelect.value;
         level = parseInt(startingLevelSelect.value);
         score = 0;
-        lives = 3;
         consecutiveCorrect = 0;
         consecutiveIncorrect = 0;
         
         updateScore();
-        updateLives();
         
         // Reset the result heading to default state
         const resultHeading = document.querySelector('#result h2');
@@ -290,12 +286,14 @@ document.addEventListener('DOMContentLoaded', () => {
     function generateSubtractionQuestion(monsterColor, foodEmoji) {
         const maxNum = levelConfig[level].maxNumber;
         let num1 = Math.floor(Math.random() * maxNum) + 1;
-        let num2 = Math.floor(Math.random() * num1) + 1;
         
-        // Ensure we don't get negative results
-        if (num2 > num1) {
-            [num1, num2] = [num2, num1];
+        // Ensure num1 is at least 2 so we can have a meaningful subtraction
+        if (num1 < 2) {
+            num1 = 2;
         }
+        
+        // Ensure num2 is always less than num1 (so result is never 0)
+        let num2 = Math.floor(Math.random() * (num1 - 1)) + 1;
         
         correctAnswer = num1 - num2;
         
@@ -362,17 +360,17 @@ document.addEventListener('DOMContentLoaded', () => {
         while (answers.length < 4) {
             // Create answers that are close to the correct answer
             let range = Math.max(2, Math.ceil(correctAnswer / 2));
-            let min = Math.max(0, correctAnswer - range);
+            let min = Math.max(1, correctAnswer - range);
             let max = Math.min(maxValue, correctAnswer + range);
             
             // For smaller numbers, ensure we have a good spread
             if (correctAnswer <= 5) {
-                min = 0;
+                min = 1;
                 max = Math.min(10, maxValue);
             }
             
             const randomAnswer = Math.floor(Math.random() * (max - min + 1)) + min;
-            if (!answers.includes(randomAnswer) && randomAnswer >= 0) {
+            if (!answers.includes(randomAnswer) && randomAnswer > 0) {
                 answers.push(randomAnswer);
             }
         }
@@ -387,29 +385,25 @@ document.addEventListener('DOMContentLoaded', () => {
             
             // Add food emojis based on the answer number, organized in rows of 10
             let buttonHTML = '';
-            if (answer === 0) {
-                buttonHTML = '<div class="emoji-row">0</div>';
-            } else {
-                const fullRows = Math.floor(answer / 10);
-                const remainder = answer % 10;
-                
-                // Create full rows of 10 emojis
-                for (let row = 0; row < fullRows; row++) {
-                    buttonHTML += '<div class="emoji-row">';
-                    for (let i = 0; i < 10; i++) {
-                        buttonHTML += foodEmoji;
-                    }
-                    buttonHTML += '</div>';
+            const fullRows = Math.floor(answer / 10);
+            const remainder = answer % 10;
+            
+            // Create full rows of 10 emojis
+            for (let row = 0; row < fullRows; row++) {
+                buttonHTML += '<div class="emoji-row">';
+                for (let i = 0; i < 10; i++) {
+                    buttonHTML += foodEmoji;
                 }
-                
-                // Add remaining emojis in the last row
-                if (remainder > 0) {
-                    buttonHTML += '<div class="emoji-row">';
-                    for (let i = 0; i < remainder; i++) {
-                        buttonHTML += foodEmoji;
-                    }
-                    buttonHTML += '</div>';
+                buttonHTML += '</div>';
+            }
+            
+            // Add remaining emojis in the last row
+            if (remainder > 0) {
+                buttonHTML += '<div class="emoji-row">';
+                for (let i = 0; i < remainder; i++) {
+                    buttonHTML += foodEmoji;
                 }
+                buttonHTML += '</div>';
             }
             
             option.innerHTML = buttonHTML;
@@ -498,11 +492,9 @@ document.addEventListener('DOMContentLoaded', () => {
         consecutiveIncorrect++;
         consecutiveCorrect = 0;
         
-        // Update result and lives
+        // Update result
         resultHeading.textContent = 'Oops!';
         resultHeading.classList.add('incorrect');
-        lives--;
-        updateLives();
         
         let message = `That's not right. The correct answer was ${correctAnswer}.`;
         
@@ -518,17 +510,6 @@ document.addEventListener('DOMContentLoaded', () => {
         }
         
         resultMessage.textContent = message;
-        
-        // Check if game over
-        if (lives <= 0) {
-            resultMessage.textContent += ' Game Over! Let\'s start again.';
-            // Reset the game
-            setTimeout(() => {
-                startGame();
-            }, 3000);
-            return;
-        }
-        
         updateScore();
     }
     
@@ -538,14 +519,7 @@ document.addEventListener('DOMContentLoaded', () => {
         levelDisplay.textContent = `Level: ${level} (up to ${levelConfig[level].maxNumber})`;
     }
     
-    // Update the lives display
-    function updateLives() {
-        let heartsText = '';
-        for (let i = 0; i < lives; i++) {
-            heartsText += '❤️';
-        }
-        livesDisplay.textContent = heartsText;
-    }
+
     
     // Utility function to shuffle an array
     function shuffleArray(array) {

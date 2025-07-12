@@ -32,15 +32,9 @@ describe('Math Monster Munch Game UI', () => {
   test('should display game stats', () => {
     const score = screen.getByText(/Score: 0/i);
     const level = screen.getByText(/Level: 1/i);
-    const lives = screen.getByText(/Lives:/i);
     
     expect(score).toBeInTheDocument();
     expect(level).toBeInTheDocument();
-    expect(lives).toBeInTheDocument();
-    
-    // Check if lives display has hearts
-    const livesSpan = document.querySelector('#lives span');
-    expect(livesSpan.textContent).toBe('❤️❤️❤️');
   });
 
   test('should display game controls', () => {
