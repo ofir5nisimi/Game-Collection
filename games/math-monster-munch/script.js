@@ -48,8 +48,8 @@ document.addEventListener('DOMContentLoaded', () => {
     // Food emojis
     const foodEmojis = ['🍎', '🍌', '🍕', '🍪', '🍦', '🍩'];
     
-    // Sound effects using base64 encoded audio for better quality
-    function playApplauseSound() {
+    // Sound effects using Web Audio API
+    function playSuccessSound() {
         try {
             // Short, pleasant success chime using Web Audio API with better synthesis
             const audioContext = new (window.AudioContext || window.webkitAudioContext)();
@@ -65,9 +65,9 @@ document.addEventListener('DOMContentLoaded', () => {
                     oscillator.type = 'sine';
                     oscillator.frequency.setValueAtTime(frequency, audioContext.currentTime);
                     
-                    // Gentle envelope
+                    // Gentle envelope with increased volume
                     gainNode.gain.setValueAtTime(0, audioContext.currentTime);
-                    gainNode.gain.linearRampToValueAtTime(0.1, audioContext.currentTime + 0.05);
+                    gainNode.gain.linearRampToValueAtTime(0.15, audioContext.currentTime + 0.05);
                     gainNode.gain.exponentialRampToValueAtTime(0.01, audioContext.currentTime + 0.4);
                     
                     oscillator.connect(gainNode);
@@ -82,7 +82,7 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     }
     
-    function playOhhhSound() {
+    function playErrorSound() {
         try {
             // Gentle descending tone for incorrect answers
             const audioContext = new (window.AudioContext || window.webkitAudioContext)();
@@ -94,10 +94,9 @@ document.addEventListener('DOMContentLoaded', () => {
             oscillator.frequency.setValueAtTime(400, audioContext.currentTime);
             oscillator.frequency.exponentialRampToValueAtTime(200, audioContext.currentTime + 0.6);
             
-            // Gentle, soft envelope
+            // Clean, simple envelope: attack then release
             gainNode.gain.setValueAtTime(0, audioContext.currentTime);
-            gainNode.gain.linearRampToValueAtTime(0.08, audioContext.currentTime + 0.1);
-            gainNode.gain.linearRampToValueAtTime(0.05, audioContext.currentTime + 0.3);
+            gainNode.gain.linearRampToValueAtTime(0.15, audioContext.currentTime + 0.1);
             gainNode.gain.exponentialRampToValueAtTime(0.01, audioContext.currentTime + 0.6);
             
             oscillator.connect(gainNode);
@@ -540,8 +539,8 @@ document.addEventListener('DOMContentLoaded', () => {
     function handleCorrectAnswer(resultHeading) {
         const monster = document.querySelector('.monster');
         
-        // Play applause sound
-        playApplauseSound();
+        // Play success sound
+        playSuccessSound();
         
         // Clear any previous emotion classes and add happy
         monster.classList.remove('happy', 'hungry');
@@ -581,8 +580,8 @@ document.addEventListener('DOMContentLoaded', () => {
     function handleIncorrectAnswer(resultHeading) {
         const monster = document.querySelector('.monster');
         
-        // Play "ohhh" sound
-        playOhhhSound();
+        // Play error sound
+        playErrorSound();
         
         // Clear any previous emotion classes and add sad
         monster.classList.remove('happy', 'hungry');

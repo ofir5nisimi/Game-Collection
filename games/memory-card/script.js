@@ -54,7 +54,7 @@ document.addEventListener('DOMContentLoaded', () => {
     };
 
     // Sound effects using Web Audio API
-    function playApplauseSound() {
+    function playSuccessSound() {
         try {
             // Short, pleasant success chime using Web Audio API with better synthesis
             const audioContext = new (window.AudioContext || window.webkitAudioContext)();
@@ -290,7 +290,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     matchedPairs++;
                     
                     // Play success sound
-                    playApplauseSound();
+                    playSuccessSound();
                     
                     // Update player score in multiplayer mode
                     if (isMultiplayer) {
