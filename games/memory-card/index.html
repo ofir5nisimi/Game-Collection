@@ -14,10 +14,56 @@
 <body>
     <div class="container">
         <h1>Memory Card Game</h1>
-        <div class="stats">
+        
+        <!-- Game Mode Selection -->
+        <div class="mode-selection">
+            <label for="game-mode">Game Mode:</label>
+            <select id="game-mode">
+                <option value="single">Single Player</option>
+                <option value="multiplayer">Two Players</option>
+            </select>
+        </div>
+
+        <!-- Player Name Setup -->
+        <div id="player-names-setup" class="player-names-setup hidden">
+            <h3>Enter Player Names</h3>
+            <div class="name-inputs">
+                <div class="name-input-group">
+                    <label for="player1-name">Player 1 Name:</label>
+                    <input type="text" id="player1-name" placeholder="Player 1" maxlength="15">
+                </div>
+                <div class="name-input-group">
+                    <label for="player2-name">Player 2 Name:</label>
+                    <input type="text" id="player2-name" placeholder="Player 2" maxlength="15">
+                </div>
+            </div>
+        </div>
+
+        <!-- Player Display Area -->
+        <div id="players-info" class="players-info hidden">
+            <div class="player-section">
+                <div class="player-card player1">
+                    <div class="player-name">Player 1</div>
+                    <div class="player-score">0 pairs</div>
+                </div>
+                <div class="turn-indicator">
+                    <div class="turn-arrow">→</div>
+                    <div class="turn-text">Player 1's Turn</div>
+                </div>
+                <div class="player-card player2">
+                    <div class="player-name">Player 2</div>
+                    <div class="player-score">0 pairs</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Single Player Stats -->
+        <div id="single-stats" class="stats">
             <div id="moves">0 Moves</div>
             <div id="timer">Time: 0s</div>
-        </div>        <div class="controls">
+        </div>        
+        
+        <div class="controls">
             <button id="start-btn">Start New Game</button>
             <button id="home-btn" onclick="window.location.href='../../index.html'">Home</button>
             <div class="difficulty">

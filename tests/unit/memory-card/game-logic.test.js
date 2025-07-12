@@ -150,8 +150,18 @@ describe('Memory Card Game Logic', () => {
     expect(state1.flippedCards.length).toBe(1);
     expect(state1.gameStarted).toBe(true);
     
+    // Find a card with a different symbol from the first card
+    const firstSymbol = gameState.cards[0];
+    let differentCardIndex = -1;
+    for (let i = 1; i < gameState.cards.length; i++) {
+      if (gameState.cards[i] !== firstSymbol) {
+        differentCardIndex = i;
+        break;
+      }
+    }
+    
     // Flip second card (different symbol)
-    const state2 = flipCard(gameState.totalPairs); // Ensure different symbol
+    const state2 = flipCard(differentCardIndex);
     expect(state2.flippedCards.length).toBe(2);
     expect(state2.moves).toBe(1);
     expect(state2.canFlip).toBe(false);
