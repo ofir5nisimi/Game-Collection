@@ -19,6 +19,8 @@ document.addEventListener('DOMContentLoaded', () => {
     const player2Score = document.querySelector('.player2 .player-score');
     const player1NameDisplay = document.querySelector('.player1 .player-name');
     const player2NameDisplay = document.querySelector('.player2 .player-name');
+    const compactTurnStatus = document.getElementById('compact-turn-status');
+    const compactTurnText = document.querySelector('.compact-turn-text');
 
     // Game state variables
     let cards = [];
@@ -68,9 +70,9 @@ document.addEventListener('DOMContentLoaded', () => {
                     oscillator.type = 'sine';
                     oscillator.frequency.setValueAtTime(frequency, audioContext.currentTime);
                     
-                    // Gentle envelope
+                    // Gentle envelope with increased volume
                     gainNode.gain.setValueAtTime(0, audioContext.currentTime);
-                    gainNode.gain.linearRampToValueAtTime(0.1, audioContext.currentTime + 0.05);
+                    gainNode.gain.linearRampToValueAtTime(0.2, audioContext.currentTime + 0.05);
                     gainNode.gain.exponentialRampToValueAtTime(0.01, audioContext.currentTime + 0.4);
                     
                     oscillator.connect(gainNode);
@@ -113,10 +115,15 @@ document.addEventListener('DOMContentLoaded', () => {
             playersInfo.classList.add('hidden');
             playerNamesSetup.classList.remove('hidden');
             singleStats.classList.add('hidden');
+            compactTurnStatus.classList.remove('hidden');
         } else {
             playersInfo.classList.add('hidden');
             playerNamesSetup.classList.add('hidden');
             singleStats.classList.remove('hidden');
+            compactTurnStatus.classList.add('hidden');
+            
+            // Reset game board styling for single player
+            gameBoard.className = 'game-board';
         }
         
         // Don't auto-reset game when mode changes, let user set names first
@@ -144,6 +151,15 @@ document.addEventListener('DOMContentLoaded', () => {
             turnArrow.classList.remove('player2-turn');
             turnText.classList.add('player1-turn');
             turnText.classList.remove('player2-turn');
+            
+            // Update compact turn status
+            compactTurnText.textContent = `${names.player1}'s Turn`;
+            compactTurnStatus.classList.add('player1-active');
+            compactTurnStatus.classList.remove('player2-active');
+            
+            // Update game board border
+            gameBoard.classList.add('player1-active');
+            gameBoard.classList.remove('player2-active');
         } else {
             player1Card.classList.remove('active');
             player2Card.classList.add('active');
@@ -155,6 +171,15 @@ document.addEventListener('DOMContentLoaded', () => {
             turnArrow.classList.remove('player1-turn');
             turnText.classList.add('player2-turn');
             turnText.classList.remove('player1-turn');
+            
+            // Update compact turn status
+            compactTurnText.textContent = `${names.player2}'s Turn`;
+            compactTurnStatus.classList.add('player2-active');
+            compactTurnStatus.classList.remove('player1-active');
+            
+            // Update game board border
+            gameBoard.classList.add('player2-active');
+            gameBoard.classList.remove('player1-active');
         }
     }
 
@@ -173,6 +198,7 @@ document.addEventListener('DOMContentLoaded', () => {
             updatePlayerNameDisplays();
             playersInfo.classList.remove('hidden');
             playerNamesSetup.classList.add('hidden');
+            compactTurnStatus.classList.remove('hidden');
         }
         
         resetGame();
@@ -352,7 +378,14 @@ document.addEventListener('DOMContentLoaded', () => {
         if (!isMultiplayer) {
             movesElement.textContent = '0 Moves';
             timerElement.textContent = 'Time: 0s';
+            
+            // Reset game board styling for single player
+            gameBoard.className = 'game-board';
         } else {
+            // Reset compact turn status and game board styling
+            compactTurnStatus.classList.remove('player1-active', 'player2-active');
+            gameBoard.classList.remove('player1-active', 'player2-active');
+            
             updatePlayerDisplay();
         }
     }
