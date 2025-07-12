@@ -28,6 +28,54 @@
                     <option value="subtraction">Subtraction</option>
                     <option value="mixed">Mixed</option>
                 </select>
+                <button id="level-config-btn">Level Settings</button>
+            </div>
+            
+            <div class="level-selection">
+                <div class="level-info">
+                    <label for="starting-level">Starting Level:</label>
+                    <select id="starting-level">
+                        <option value="1">Level 1 (up to 3)</option>
+                        <option value="2">Level 2 (up to 5)</option>
+                        <option value="3">Level 3 (up to 10)</option>
+                        <option value="4">Level 4 (up to 15)</option>
+                        <option value="5">Level 5 (up to 20)</option>
+                    </select>
+                </div>
+            </div>
+            
+            <div id="level-config-modal" class="modal hidden">
+                <div class="modal-content">
+                    <h3>Level Configuration</h3>
+                    <p>Customize the highest number for each level:</p>
+                    <div class="level-config-grid">
+                        <div class="level-config-item">
+                            <label for="level-1-max">Level 1 Max:</label>
+                            <input type="number" id="level-1-max" min="1" max="50" value="3">
+                        </div>
+                        <div class="level-config-item">
+                            <label for="level-2-max">Level 2 Max:</label>
+                            <input type="number" id="level-2-max" min="1" max="50" value="5">
+                        </div>
+                        <div class="level-config-item">
+                            <label for="level-3-max">Level 3 Max:</label>
+                            <input type="number" id="level-3-max" min="1" max="50" value="10">
+                        </div>
+                        <div class="level-config-item">
+                            <label for="level-4-max">Level 4 Max:</label>
+                            <input type="number" id="level-4-max" min="1" max="50" value="15">
+                        </div>
+                        <div class="level-config-item">
+                            <label for="level-5-max">Level 5 Max:</label>
+                            <input type="number" id="level-5-max" min="1" max="50" value="20">
+                        </div>
+                    </div>
+                    <div class="modal-buttons">
+                        <button id="save-config-btn">Save Settings</button>
+                        <button id="reset-config-btn">Reset to Default</button>
+                        <button id="close-config-btn">Close</button>
+                    </div>
+                </div>
             </div>
         </header>
 

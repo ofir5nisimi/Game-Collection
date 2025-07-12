@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Debug - Math Monster Munch</title>
+</head>
+<body>
+    <h1>Debug Math Monster Munch</h1>
+    <div id="debug-info">
+        <p>Checking JavaScript errors...</p>
+    </div>
+    
+    <script>
+        console.log("Debug script starting...");
+        
+        // Test basic DOM access
+        try {
+            console.log("Testing DOM elements...");
+            
+            // Test the elements our script tries to access
+            const startBtn = document.getElementById('start-btn');
+            const startingLevelSelect = document.getElementById('starting-level');
+            const levelConfigModal = document.getElementById('level-config-modal');
+            
+            console.log("start-btn:", startBtn);
+            console.log("starting-level:", startingLevelSelect);
+            console.log("level-config-modal:", levelConfigModal);
+            
+            // Test localStorage
+            console.log("Testing localStorage...");
+            localStorage.setItem('test', 'working');
+            console.log("localStorage test:", localStorage.getItem('test'));
+            
+            document.getElementById('debug-info').innerHTML = `
+                <h2>Debug Results:</h2>
+                <p>✅ JavaScript is working</p>
+                <p>✅ Console.log is working</p>
+                <p>✅ localStorage is working</p>
+                <p>❌ Some DOM elements are missing (expected for this debug page)</p>
+                <p><strong>Check the browser console for more details</strong></p>
+            `;
+            
+        } catch (error) {
+            console.error("Error in debug script:", error);
+            document.getElementById('debug-info').innerHTML = `
+                <h2>❌ Error Found:</h2>
+                <p style="color: red;">${error.message}</p>
+                <p>Check browser console for full error details</p>
+            `;
+        }
+    </script>
+</body>
+</html> 

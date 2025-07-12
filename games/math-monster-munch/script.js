@@ -52,9 +52,20 @@ document.addEventListener('DOMContentLoaded', () => {
     
     // Initialize the game
     function init() {
-        loadLevelConfig();
-        updateStartingLevelOptions();
-        setupEventListeners();
+        try {
+            loadLevelConfig();
+            updateStartingLevelOptions();
+            setupEventListeners();
+        } catch (error) {
+            console.error('Initialization error:', error);
+            // Fallback to basic functionality
+            if (startBtn) {
+                startBtn.addEventListener('click', startGame);
+            }
+            if (nextBtn) {
+                nextBtn.addEventListener('click', generateQuestion);
+            }
+        }
     }
     
     // Load level configuration from localStorage or use defaults
@@ -88,28 +99,44 @@ document.addEventListener('DOMContentLoaded', () => {
     
     // Update starting level options based on current configuration
     function updateStartingLevelOptions() {
-        const options = startingLevelSelect.querySelectorAll('option');
-        options.forEach((option, index) => {
-            const levelNum = index + 1;
-            option.textContent = `Level ${levelNum} (up to ${levelConfig[levelNum].maxNumber})`;
-        });
+        try {
+            if (!startingLevelSelect) {
+                console.warn('startingLevelSelect element not found');
+                return;
+            }
+            const options = startingLevelSelect.querySelectorAll('option');
+            options.forEach((option, index) => {
+                const levelNum = index + 1;
+                if (levelConfig[levelNum]) {
+                    option.textContent = `Level ${levelNum} (up to ${levelConfig[levelNum].maxNumber})`;
+                }
+            });
+        } catch (error) {
+            console.error('Error updating starting level options:', error);
+        }
     }
     
     // Setup all event listeners
     function setupEventListeners() {
-        startBtn.addEventListener('click', startGame);
-        nextBtn.addEventListener('click', generateQuestion);
-        levelConfigBtn.addEventListener('click', openLevelConfig);
-        saveConfigBtn.addEventListener('click', saveLevelConfigFromInputs);
-        resetConfigBtn.addEventListener('click', resetLevelConfig);
-        closeConfigBtn.addEventListener('click', closeLevelConfig);
-        
-        // Close modal when clicking outside
-        levelConfigModal.addEventListener('click', (e) => {
-            if (e.target === levelConfigModal) {
-                closeLevelConfig();
+        try {
+            if (startBtn) startBtn.addEventListener('click', startGame);
+            if (nextBtn) nextBtn.addEventListener('click', generateQuestion);
+            if (levelConfigBtn) levelConfigBtn.addEventListener('click', openLevelConfig);
+            if (saveConfigBtn) saveConfigBtn.addEventListener('click', saveLevelConfigFromInputs);
+            if (resetConfigBtn) resetConfigBtn.addEventListener('click', resetLevelConfig);
+            if (closeConfigBtn) closeConfigBtn.addEventListener('click', closeLevelConfig);
+            
+            // Close modal when clicking outside
+            if (levelConfigModal) {
+                levelConfigModal.addEventListener('click', (e) => {
+                    if (e.target === levelConfigModal) {
+                        closeLevelConfig();
+                    }
+                });
             }
-        });
+        } catch (error) {
+            console.error('Error setting up event listeners:', error);
+        }
     }
     
     // Open level configuration modal
