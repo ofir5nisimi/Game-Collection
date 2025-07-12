@@ -419,7 +419,12 @@ document.addEventListener('DOMContentLoaded', () => {
         let answers = [correctAnswer];
         
         // Add 3 more unique options that are reasonable distractors
-        while (answers.length < 4) {
+        let attempts = 0;
+        const maxAttempts = 50; // Prevent infinite loops
+        
+        while (answers.length < 4 && attempts < maxAttempts) {
+            attempts++;
+            
             // Create answers that are close to the correct answer
             let range = Math.max(2, Math.ceil(correctAnswer / 2));
             let min = Math.max(1, correctAnswer - range);
@@ -431,9 +436,37 @@ document.addEventListener('DOMContentLoaded', () => {
                 max = Math.min(10, maxValue);
             }
             
+            // If the range is too small, expand it
+            if (max - min + 1 < 4) {
+                min = Math.max(1, correctAnswer - 3);
+                max = Math.min(maxValue, correctAnswer + 3);
+                
+                // If still too small, use a wider range
+                if (max - min + 1 < 4) {
+                    min = 1;
+                    max = Math.min(maxValue, Math.max(10, correctAnswer + 5));
+                }
+            }
+            
             const randomAnswer = Math.floor(Math.random() * (max - min + 1)) + min;
             if (!answers.includes(randomAnswer) && randomAnswer > 0) {
                 answers.push(randomAnswer);
+            }
+        }
+        
+        // If we still don't have enough answers, fill with sequential numbers
+        if (answers.length < 4) {
+            let fillValue = 1;
+            while (answers.length < 4) {
+                if (!answers.includes(fillValue) && fillValue > 0) {
+                    answers.push(fillValue);
+                }
+                fillValue++;
+                
+                // Safety check to prevent infinite loop
+                if (fillValue > Math.max(20, maxValue)) {
+                    break;
+                }
             }
         }
         
