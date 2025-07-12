@@ -48,6 +48,68 @@ document.addEventListener('DOMContentLoaded', () => {
     // Food emojis
     const foodEmojis = ['🍎', '🍌', '🍕', '🍪', '🍦', '🍩'];
     
+    // Sound effects using base64 encoded audio for better quality
+    function playApplauseSound() {
+        try {
+            // Short, pleasant success chime using Web Audio API with better synthesis
+            const audioContext = new (window.AudioContext || window.webkitAudioContext)();
+            
+            // Create a pleasant success melody
+            const notes = [523.25, 659.25, 783.99]; // C5, E5, G5 - major chord
+            
+            notes.forEach((frequency, index) => {
+                setTimeout(() => {
+                    const oscillator = audioContext.createOscillator();
+                    const gainNode = audioContext.createGain();
+                    
+                    oscillator.type = 'sine';
+                    oscillator.frequency.setValueAtTime(frequency, audioContext.currentTime);
+                    
+                    // Gentle envelope
+                    gainNode.gain.setValueAtTime(0, audioContext.currentTime);
+                    gainNode.gain.linearRampToValueAtTime(0.1, audioContext.currentTime + 0.05);
+                    gainNode.gain.exponentialRampToValueAtTime(0.01, audioContext.currentTime + 0.4);
+                    
+                    oscillator.connect(gainNode);
+                    gainNode.connect(audioContext.destination);
+                    oscillator.start();
+                    oscillator.stop(audioContext.currentTime + 0.4);
+                }, index * 100);
+            });
+            
+        } catch (error) {
+            console.log('Audio not supported or disabled');
+        }
+    }
+    
+    function playOhhhSound() {
+        try {
+            // Gentle descending tone for incorrect answers
+            const audioContext = new (window.AudioContext || window.webkitAudioContext)();
+            
+            const oscillator = audioContext.createOscillator();
+            const gainNode = audioContext.createGain();
+            
+            oscillator.type = 'sine';
+            oscillator.frequency.setValueAtTime(400, audioContext.currentTime);
+            oscillator.frequency.exponentialRampToValueAtTime(200, audioContext.currentTime + 0.6);
+            
+            // Gentle, soft envelope
+            gainNode.gain.setValueAtTime(0, audioContext.currentTime);
+            gainNode.gain.linearRampToValueAtTime(0.08, audioContext.currentTime + 0.1);
+            gainNode.gain.linearRampToValueAtTime(0.05, audioContext.currentTime + 0.3);
+            gainNode.gain.exponentialRampToValueAtTime(0.01, audioContext.currentTime + 0.6);
+            
+            oscillator.connect(gainNode);
+            gainNode.connect(audioContext.destination);
+            oscillator.start();
+            oscillator.stop(audioContext.currentTime + 0.6);
+            
+        } catch (error) {
+            console.log('Audio not supported or disabled');
+        }
+    }
+    
     // Initialize the game
     function init() {
         try {
@@ -445,6 +507,9 @@ document.addEventListener('DOMContentLoaded', () => {
     function handleCorrectAnswer(resultHeading) {
         const monster = document.querySelector('.monster');
         
+        // Play applause sound
+        playApplauseSound();
+        
         // Clear any previous emotion classes and add happy
         monster.classList.remove('happy', 'hungry');
         monster.classList.add('happy');
@@ -482,6 +547,9 @@ document.addEventListener('DOMContentLoaded', () => {
     // Handle incorrect answer
     function handleIncorrectAnswer(resultHeading) {
         const monster = document.querySelector('.monster');
+        
+        // Play "ohhh" sound
+        playOhhhSound();
         
         // Clear any previous emotion classes and add sad
         monster.classList.remove('happy', 'hungry');
